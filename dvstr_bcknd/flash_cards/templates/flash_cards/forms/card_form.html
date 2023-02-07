@@ -1,0 +1,86 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Django Tailwind</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    {% tailwind_css %}
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://kit.fontawesome.com/df62ff4303.js" crossorigin="anonymous"></script>
+  </head>
+
+  <body class="bg-indigo-200">
+    <div class="container mx-auto">
+      <div class="flex flex-col gap-2 items-center justify-center h-screen">
+          {% if card %}
+            <form method="post" enctype="multipart/form-data" action="{% url 'card-index' card.module.slug card.id %}">
+          {% else %}
+            <form method="post" enctype="multipart/form-data" action="{% url 'new-card' module.slug %}">
+          {% endif %}
+            {% csrf_token %}
+            <div class="flex flex-col gap-3 mb-3">
+              <div>
+                <label for="id_front" class="block text-gray-700 text-sm font-bold">
+                  Front
+                </label>
+                <input type="text" name="front" value="{{ card.front }}" maxlength="120" required id="id_front" placeholder="Front">
+              </div>
+              <div>
+                <label for="id_back" class="block text-gray-700 text-sm font-bold">
+                  Back
+                </label>
+                <input type="text" name="back" value="{{ card.back }}" maxlength="120" required id="id_back" placeholder="Back">
+              </div>
+              <div>
+                <label for="id_hint" class="block text-gray-700 text-sm font-bold">
+                  Hint
+                </label>
+                <input type="text" name="hint" value="{{ card.hint }}" maxlength="120" id="id_hint" placeholder="Hint">
+              </div>
+              <div class="flex gap-2 items-center">
+                <label for="id_invertible" class="text-gray-700 text-sm font-bold">Invertible</label>
+                <input type="checkbox" name="invertible" id="id_invertible" {% if card.invertible %} checked {% endif %}>
+              </div>
+              <div class="w-52" x-data="{
+                  tags: {{tags}},
+                  tagInput: ''
+                }">
+                <label for="id_tag_input" class="block text-gray-700 text-sm font-bold">Tags (type and enter)</label>
+                <input 
+                  type="text" name="tag_input" maxlength="35" 
+                  id="id_tag_input" placeholder="Tag" x-model="tagInput"
+                  x-on:keydown.enter.prevent="if (!tags.includes(tagInput)) tags.push(tagInput);tagInput=''"
+                >
+                <div class="mt-2 flex flex-wrap gap-2">
+                  <template x-for="tag in tags">
+                    <div class="flex items-center gap-1 py-1 px-2 border bg-blue-300 hover:cursor-pointer">
+                      <p x-text="tag"></p>
+                      <i 
+                        class="fa-solid fa-xmark text-blue-700"
+                        x-on:click="tags = tags.filter(i => i !== tag)"
+                      ></i>
+                    </div>
+                  </template>
+                  <input hidden type="text" name="tags" :value="tags.join(',')" id="id_tags">
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="text-xl border border-indigo-500 hover:bg-indigo-500 rounded-lg p-1 w-full">
+              Save
+            </button>
+          </form>
+      </section>
+    </div>
+    <script>
+      function tagSelect() {
+        return {
+          addTag(tag) {
+
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
