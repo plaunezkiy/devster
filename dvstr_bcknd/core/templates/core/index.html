@@ -1,0 +1,13 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="mt-12 w-full flex justify-center">
+  <div class="mx-4 md:w-1/4 border rounded shadow p-4">
+    <img
+      src="{% static 'images/cat.jpg' %}"
+      alt=""
+      class="md:float-right w-48 h-52 rounded shadow-md"
+    />
+    <p class="text-3xl text-center text-slate-900 font-semibold tracking-tight">Hello there and welcome to <span class="text-blue-600 hover:text-red-400 duration-300 cursor-pointer">Devster</span>!</p>
+    <p class="">I'm Nik and I love programming</p>
+  </div>
+</div>
+{% endblock %}
