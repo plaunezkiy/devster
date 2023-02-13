@@ -17,9 +17,10 @@
     ></script>
   </head>
 
-  <body class="font-sans min-h-screen">
-    {% include 'includes/navbar.html' %}
-    {% block content %} {% endblock %}
-    {% include 'includes/footer.html' %}
+  <body
+    class="font-sans min-h-screen dark:bg-zinc-800 duration-300 text-gray-700 dark:text-gray-200 mb-24 md:mb-0"
+  >
+    {% include 'includes/navbar.html' %} {% block content %} {% endblock %}
+    {%include 'includes/footer.html' %}
   </body>
 </html>
