@@ -35,4 +35,4 @@ class CardSerializer(serializers.ModelSerializer):
 class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Session
-        fields = "__all__"
+        fields = ("id", "start_time", "end_time")

@@ -9,3 +9,7 @@ def index(request):
 
 def cv_index(request):
     return render(request, 'core/cv.html')
+
+
+def apps_index(request):
+    return render(request, 'core/apps.html')

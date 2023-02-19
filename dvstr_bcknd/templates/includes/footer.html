@@ -1,7 +1,15 @@
-<footer class="fixed bottom-0 h-16 md:h-10 px-4 w-full flex items-center justify-between bg-black text-gray-300 text-xs" x-data="{active: true}" x-show="active">
+<footer
+  class="fixed bottom-0 h-16 md:h-10 px-4 w-full flex items-center justify-between bg-black text-gray-300 text-xs"
+  x-data="{active: false}"
+  x-show="active"
+>
   <p>
     © Copyright 2023 - Every right reserved or not I don't know how any of it
-    works to be honest, but don't steal anything, please, or do but in the name of science
+    works to be honest, but don't steal anything, please, or do but in the name
+    of science
   </p>
-  <i class="fa fa-xmark text-xs text-white cursor-pointer" x-on:click="active = !active"></i>
+  <i
+    class="fa fa-xmark text-xs text-white cursor-pointer"
+    x-on:click="active = !active"
+  ></i>
 </footer>

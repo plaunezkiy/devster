@@ -1,6 +1,12 @@
 from django.forms import ModelForm
-from flash_cards.models import Card
+from flash_cards.models import Card, Module
 from taggit.forms import TagField
+
+
+class ModuleForm(ModelForm):
+    class Meta:
+        model = Module
+        fields = '__all__'
 
 
 class CardForm(ModelForm):
