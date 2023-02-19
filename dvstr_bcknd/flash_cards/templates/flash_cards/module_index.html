@@ -1,61 +1,82 @@
-{% load static tailwind_tags %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Cards</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    {% tailwind_css %}
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://kit.fontawesome.com/df62ff4303.js" crossorigin="anonymous"></script>
-
-  </head>
-
-  <body class="bg-indigo-200 font-serif leading-normal tracking-normal">
-    <div class="container mx-auto my-12">
-      <div class="flex flex-col gap-2 items-center justify-center">
-        <div class="flex flex-col gap-2">
-          <a class="text-xl rounded-lg p-1 border border-blue-600 hover:bg-blue-600 text-center" href="{% url 'new-card' slug=module.slug %}">+</a>
-          {% for card in cards %}
-          <div class="flex rounded-lg border border-blue-600 ">
-            <a class="w-full text-xl p-1 rounded-l hover:bg-blue-600" href="{% url 'card-index' slug=module.slug id=card.id %}">
-              {{card}}
-            </a>
-            <div class="relative" @click.away="showContextMenu=false" x-data="{showContextMenu:false}">
-              <button 
-                class="bg-red-300/50 h-10 w-10 text-center text-gray-800 text-xl rounded-r-lg transition-all"
-                @click.prevent="showContextMenu=true">
-                <i class="fa-regular fa-trash-can"></i>
-              </button>
-              <div class="absolute top-0 -right-10 z-30" style="display:none;" x-show="showContextMenu" 
-                x-transition:enter="transition ease duration-100 transform" x-transition:enter-start="opacity-0 scale-90 translate-y-1" 
-                x-transition:enter-end="opacity-100 scale-100 translate-y-0" x-transition:leave="transition ease duration-100 transform" 
-                x-transition:leave-start="opacity-100 scale-100 translate-y-0" x-transition:leave-end="opacity-0 scale-90 translate-y-1"
+{% extends 'base.html' %} {% block content %}
+<div class="container mx-auto my-12">
+  <div class="flex justify-center mx-4 md:mx-auto">
+    <div class="flex flex-col gap-3">
+      <div class="flex flex-col md:flex-row gap-2">
+        <a
+          class="w-full text-xl font-semibold text-center rounded-lg p-1 border hover:bg-blue-400 hover:text-gray-800 dark:hover:bg-gray-500 dark:border-gray-500"
+          href="{% url 'cards-round' %}"
+          >Start a round</a
+        >
+        <a
+          class="w-full text-xl font-semibold text-center rounded-lg p-1 border hover:bg-blue-400 hover:text-gray-800 dark:hover:bg-gray-500 dark:border-gray-500"
+          href=""
+          >Statistics</a
+        >
+        <a
+          class="w-full text-xl font-semibold text-center rounded-lg p-1 border hover:bg-blue-400 hover:text-gray-800 dark:hover:bg-gray-500 dark:border-gray-500"
+          href="{% url 'new-card' slug=module.slug %}"
+          >+</a
+        >
+      </div>
+      <div class="flex flex-col gap-2 mb-2">
+        <input
+          type="text"
+          placeholder="Search..."
+          class="w-full rounded-lg text-gray-700"
+        />
+        <p class="text-xs text-center">Cards found: {{ cards|length }}</p>
+      </div>
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {% for card in cards %}
+        <div
+          class="flex rounded-lg border hover:bg-sky-100 dark:hover:bg-gray-500 dark:border-gray-500 min-h-fit min-w-fit"
+        >
+          <a
+            class="p-2 w-full text-xl rounded-l text-left"
+            href="{% url 'card-index' slug=module.slug id=card.id %}"
+          >
+            {{card.front}}
+          </a>
+          <div
+            class="ml-2 relative"
+            @click.away="showContextMenu=false"
+            x-data="{showContextMenu:false}"
+          >
+            <button
+              class="bg-red-300 h-full w-10 text-center text-gray-800 text-xl rounded-r-lg transition-all"
+              @click.prevent="showContextMenu=true"
+            >
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+            <div
+              class="absolute top-1 -left-10 z-30"
+              style="display: none"
+              x-show="showContextMenu"
+              x-transition:enter="transition ease duration-100 transform"
+              x-transition:enter-start="opacity-0 scale-90 translate-x-1"
+              x-transition:enter-end="opacity-100 scale-100 translate-x-0"
+              x-transition:leave="transition ease duration-100 transform"
+              x-transition:leave-start="opacity-100 scale-100 translate-x-0"
+              x-transition:leave-end="opacity-0 scale-90 translate-x-1"
+            >
+              <div
+                class="bg-white overflow-auto rounded-lg shadow-md relative z-10 border border-gray-300 text-gray-800 text-xs"
               >
-                  <div class="bg-white overflow-auto rounded-lg shadow-md relative z-10 border border-gray-300 text-gray-800 text-xs">
-                    <a 
-                      href="#" 
-                      class="p-3 flex hover:bg-red-300/50 no-underline hover:no-underline transition-colors duration-100 text-red-500" 
-                      @click.prevent="showContextMenu=false;fetch('{% url 'api:cards-detail' card.id %}', {method: 'DELETE', headers: {'X-CSRFToken': '{{ csrf_token }}'}}).then(response => window.location.reload())">
-                      <i class="fa-solid fa-xmark text-md"></i>
-                    </a>
-                  </div>
+                <a
+                  href="#"
+                  class="p-3 flex hover:bg-red-300/50 no-underline hover:no-underline transition-colors duration-100 text-red-500"
+                  @click.prevent="showContextMenu=false;fetch('{% url 'api:cards-detail' card.id %}', {method: 'DELETE', headers: {'X-CSRFToken': '{{ csrf_token }}'}}).then(response => window.location.reload())"
+                >
+                  <i class="fa-solid fa-xmark text-md"></i>
+                </a>
               </div>
+            </div>
           </div>
-          </div>
-          {% endfor %}
         </div>
-      </section>
+        {% endfor %}
+      </div>
     </div>
-    <script>
-      function cards() {
-        return {
-          deleteCard(id) {
-
-          }
-        }
-      }
-    </script>
-  </body>
-</html>
+  </div>
+</div>
+{% endblock %}

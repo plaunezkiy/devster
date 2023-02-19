@@ -1,0 +1,15 @@
+{% extends 'base.html' %} {% block content %}
+<div class="mt-12 flex justify-center">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+    <div
+      class="w-44 h-36 md:w-52 md:h-48 p-4 border rounded-lg shadow-md cursor-pointer hover:text-blue-600 dark:hover:text-blue-300 hover:-translate-y-1 duration-150"
+      onclick="window.location.href='{% url 'cards-index' %}'"
+    >
+      <p class="text-xl font-semibold text-center">Flash Cards</p>
+    </div>
+    <div class="w-44 h-36 md:w-52 md:h-48 p-4 border rounded-lg shadow-md">App 2</div>
+    <div class="w-44 h-36 md:w-52 md:h-48 p-4 border rounded-lg shadow-md">App 3</div>
+    <div class="w-44 h-36 md:w-52 md:h-48 p-4 border rounded-lg shadow-md">App 4</div>
+  </div>
+</div>
+{%endblock %}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.postgres.fields import ArrayField
 from taggit.managers import TaggableManager
 
 
@@ -40,6 +41,8 @@ class Card(models.Model):
 class Session(models.Model):
     start_time = models.DateTimeField(editable=False)
     end_time = models.DateTimeField(null=True)
+    modules = models.ManyToManyField(Module, related_name="sessions", blank=True)
+    queue = ArrayField(models.IntegerField(), blank=True, default=list())
     cards = models.ManyToManyField(Card, through='SessionCardAnswer', related_name='sessions')
 
     def save(self, *args, **kwargs):
