@@ -51,8 +51,8 @@ class SessionViewSet(viewsets.ModelViewSet):
     def generate_queue(self, request, pk):
         session = get_object_or_404(Session, pk=pk)
         # return 403 if the queue has already been created
-        if session.queue:
-            return response.Response(data={"message": "The queue has already been created."}, status=status.HTTP_403_FORBIDDEN)
+        # if session.queue:
+        #     return response.Response(data={"message": "The queue has already been created."}, status=status.HTTP_403_FORBIDDEN)
         cards = Card.objects.all()
         # filter by slugs, otherwise all of the cards
         slugs = self.request.query_params.get('slug')
