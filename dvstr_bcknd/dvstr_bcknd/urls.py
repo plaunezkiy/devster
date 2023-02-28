@@ -14,6 +14,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('tinymce/', include('tinymce.urls')),
     path('', include('core.urls')),
+    path('blog/', include('blog.urls')),
     path('apps/cards/', include('flash_cards.urls')),
     path('api/cards/', include('flash_cards.api_urls', namespace='api')),
     path("__reload__/", include("django_browser_reload.urls")),

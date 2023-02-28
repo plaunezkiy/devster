@@ -1,0 +1,85 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="mt-12 w-full flex justify-center">
+  <div class="mx-4">
+    <div
+      class="content flex flex-col md:flex-row justify-center gap-8 md:gap-16 px-4 md:px-12 mt-8 md:mt-12"
+    >
+      <div class="order-2 md:order-1 flex flex-col gap-4">
+        <p class="text-md text-gray-500">Entries found: {{ posts|length }}</p>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {% for post in posts %}
+          <div
+            onclick="window.location.href='{% url 'post-index' post.slug %}'"
+            class="h-64 flex flex-col rounded-lg shadow-lg cursor-pointer duration-150 border border-1 hover:-translate-y-1 hover:text-blue-500"
+          >
+            <div class="h-40 relative overflow-hidden">
+              <img
+                src="{{ post.image.url }}"
+                alt="Post image"
+                class="h-full w-full rounded-t-lg object-cover"
+              />
+              {% comment %}
+              <div class="absolute bottom-0 flex flex-wrap gap-2 px-2 mb-2">
+                {tags.map((tag) => (
+                <span class="{`${tag.color}" text-white text-sm px-1 rounded`}>
+                  {tag.name}
+                </span>
+                ))}
+              </div>
+              {% endcomment %}
+            </div>
+
+            <div class="relative flex flex-col grow px-4 my-1">
+              <h1 class="text-md font-semibold">{{ post.title }}</h1>
+              {% comment %}
+              <p class="text-sm">
+                Post description or the first couple of lines
+              </p>
+              {% endcomment %}
+              <p class="pb-1 mt-auto ml-auto text-xs text-gray-400">
+                {{ post.date_created }} 14/11/2022 - 19:07
+              </p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="order-1 h-full md:sticky top-10">
+        <div class="w-full md:w-64 h-64 rounded-lg shadow-lg p-2">
+          <div class="h-full flex flex-col grow gap-1 items-center">
+            <p class="text-lg font-semibold">Filter</p>
+            <form action="" class="flex">
+              <input
+                type="text"
+                placeholder="Search"
+                class="border rounded-l-lg font-medium text-gray-900 pl-2"
+              />
+              <button
+                type="submit"
+                class="p-2.5 text-sm font-medium text-white bg-blue-500 rounded-r-lg border border-blue-500 hover:bg-blue-700 focus:ring-1 focus:outline-none focus:ring-blue-300"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  ></path>
+                </svg>
+                <span class="sr-only">Search</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

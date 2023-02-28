@@ -72,8 +72,22 @@
           >
         </p>
         <p>
-          Alternatively, see my posts about learning and creating something
-          interesting
+          Alternatively, see my
+          <a
+            href="{% url 'blog-index' %}"
+            class="text-blue-600 hover:text-red-400 dark:text-blue-300 dark:hover:text-red-500 duration-300"
+            >posts</a
+          >
+          about learning and creating something interesting, there's some great
+          stuff on ML.
+        </p>
+        <p>
+          Find out more about who I am and my experience
+          <a
+            href="{% url 'cv-index' %}"
+            class="text-blue-600 hover:text-red-400 dark:text-blue-300 dark:hover:text-red-500 duration-300"
+            >here</a
+          >
         </p>
       </div>
       <div class="mt-12 flex flex-col gap-2">
