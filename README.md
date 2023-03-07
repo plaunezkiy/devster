@@ -1,5 +1,5 @@
 # devster
-~devster my ass~
+~devster~
 
 My very own website :-)
 
