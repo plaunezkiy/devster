@@ -13,16 +13,21 @@ api_urls = map(lambda app: path(f'api/{app["url"]}', include(app["path"])), [
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tinymce/', include('tinymce.urls')),
+    # apps
     path('', include('core.urls')),
     path('blog/', include('blog.urls')),
     path('apps/cards/', include('flash_cards.urls')),
+    path('apps/radio/', include('radio.urls')),
+    # api
     path('api/cards/', include('flash_cards.api_urls', namespace='api')),
-    path("__reload__/", include("django_browser_reload.urls")),
+    
 ]
 urlpatterns += api_urls
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
-    urlpatterns += static(settings.STATIC_URL,
-                          document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns.extend([
+        # hot reload support for tailwind
+        path("__reload__/", include("django_browser_reload.urls")),
+    ])

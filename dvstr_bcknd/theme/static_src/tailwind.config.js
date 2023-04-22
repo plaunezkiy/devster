@@ -11,10 +11,11 @@ module.exports = {
   },
   darkMode: "class",
   content: [
+    "../../**/static/js/*.{js,jsx}",
+    "../../**/static/js/**/*.{js,jsx}",
+
     "../templates/**/*.html",
-
     "../../templates/**/*.html",
-
     "../../**/templates/**/*.html",
   ],
   theme: {

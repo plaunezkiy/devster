@@ -34,9 +34,12 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'tinymce',
+    # apps
     'core',
-    'flash_cards',
     'blog',
+    'flash_cards',
+    'radio',
+    # plugins
     'tailwind',
     'theme',
     'django_browser_reload',
@@ -153,3 +156,5 @@ NPM_BIN_PATH = 'C:/Program Files/nodejs/npm.cmd'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+APPEND_SLASH = False
