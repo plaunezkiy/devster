@@ -62,6 +62,15 @@ document.addEventListener("alpine:init", () => {
     roundState: 0,
     csrf_token: null,
 
+    async fetchSession() {
+      return fetch(
+        `/api/cards/session/${this.sessionId}/generate_queue?slug=arabic`,
+        {
+          method: "GET",
+        }
+      );
+    },
+
     async fetchNextCard() {
       return fetch(`/api/cards/session/${this.sessionId}/get_card/`, {
         method: "GET",
@@ -69,8 +78,8 @@ document.addEventListener("alpine:init", () => {
         .then((resp) => resp.json())
         .then((data) => {
           // handle no cards left
-          console.log(data);
-          this.flip = false;
+          let x = Math.random();
+          this.flip = x > 0.5 ? true : false;
           this.card = data;
           this.queue.push(this.card);
         });
@@ -97,7 +106,7 @@ document.addEventListener("alpine:init", () => {
       this.queue = [];
 
       // fetch the session
-      //   fetch()
+      this.fetchSession();
 
       // fetch the card
       // once received, set Round state to ON and start the timer
@@ -109,7 +118,7 @@ document.addEventListener("alpine:init", () => {
     answerHandler(correct) {
       // save answer locally and send it to db
       this.queue[this.queue.length - 1].correct = correct;
-      this.sendCardAnswer();
+      // this.sendCardAnswer();
       // fetch a new card or stop the round
       switch (this.roundState) {
         case 1:

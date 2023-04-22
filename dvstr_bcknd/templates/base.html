@@ -7,17 +7,12 @@
   x-bind:class="{ 'dark': darkMode }"
 >
   <head>
-    <title>Modules</title>
+    <title>{% block title %} {% endblock %} | Devster</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <meta 
-      name="theme-color"
-      x-bind:content="darkMode ? '#27272a' : '#fff'"
-    />
-    {% tailwind_css %}
-    {% block head_script %}
-    {% endblock %}
+    <meta name="theme-color" x-bind:content="darkMode ? '#27272a' : '#fff'" />
+    {% tailwind_css %} {% block head_script %} {% endblock %}
     <script
       defer
       src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"

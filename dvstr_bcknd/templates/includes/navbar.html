@@ -4,10 +4,10 @@
     active: false, 
     links: 
       [
-        {title: 'Blog', href: '/blog'}, 
-        {title: 'Apps', href:'/apps'}, 
+        {title: 'Blog', href: '{% url 'blog-index' %}'}, 
+        {title: 'Apps', href:'{% url 'apps-index' %}'}, 
         {title: 'Snippets', href: '/snippets'}, 
-        {title: 'CV', href: '/cv'}
+        {title: 'CV', href: '{% url 'cv-index' %}'}
       ]
   }"
   x-on:click.away="active=false"
