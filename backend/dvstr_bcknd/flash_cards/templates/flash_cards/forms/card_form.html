@@ -1,0 +1,128 @@
+{% extends 'base.html' %} {% block content %}
+<div class="mt-12 mx-auto">
+  <div class="flex flex-col gap-2 items-center justify-center">
+    {% if card %}
+    <form
+      method="post"
+      enctype="multipart/form-data"
+      action="{% url 'card-index' card.module.slug card.id %}"
+    >
+      {% else %}
+      <form
+        method="post"
+        enctype="multipart/form-data"
+        action="{% url 'new-card' module.slug %}"
+      >
+        {% endif %} {% csrf_token %}
+        <div class="flex flex-col gap-3 mb-3">
+          <div>
+            <label for="id_front" class="block text-sm font-bold">
+              Front
+            </label>
+            <input
+              class="rounded-lg text-gray-700"
+              type="text"
+              name="front"
+              value="{{ card.front }}"
+              maxlength="120"
+              required
+              id="id_front"
+              placeholder="Front"
+            />
+          </div>
+          <div>
+            <label for="id_back" class="block text-sm font-bold"> Back </label>
+            <input
+              class="rounded-lg text-gray-700"
+              type="text"
+              name="back"
+              value="{{ card.back }}"
+              maxlength="120"
+              required
+              id="id_back"
+              placeholder="Back"
+            />
+          </div>
+          <div>
+            <label for="id_hint" class="block text-sm font-bold"> Hint </label>
+            <input
+              class="rounded-lg text-gray-700"
+              type="text"
+              name="hint"
+              value="{{ card.hint }}"
+              maxlength="120"
+              id="id_hint"
+              placeholder="Hint"
+            />
+          </div>
+          <div class="flex gap-2 items-center">
+            <label for="id_invertible" class="text-sm font-bold"
+              >Invertible</label
+            >
+            <input
+              type="checkbox"
+              name="invertible"
+              id="id_invertible"
+              {%
+              if
+              card.invertible
+              %}
+              checked
+              {%
+              endif
+              %}
+            />
+          </div>
+          <div
+            class="w-52"
+            x-data="{
+              tags: {{tags}},
+              tagInput: ''
+            }"
+          >
+            <label for="id_tag_input" class="block text-sm font-bold"
+              >Tags (type and enter)</label
+            >
+            <input
+              class="rounded-lg text-gray-700"
+              type="text"
+              name="tag_input"
+              maxlength="35"
+              id="id_tag_input"
+              placeholder="Tag"
+              x-model="tagInput"
+              x-on:keydown.enter.prevent="if (!tags.includes(tagInput)) tags.push(tagInput);tagInput=''"
+            />
+            <div class="mt-2 flex flex-wrap gap-2">
+              <template x-for="tag in tags">
+                <div
+                  class="flex items-center gap-1 py-1 px-2 rounded border dark:text-gray-700 bg-blue-300 border-blue-100 dark:bg-indigo-300 dark:border-indigo-500 hover:cursor-pointer"
+                >
+                  <p x-text="tag"></p>
+                  <i
+                    class="fa-solid fa-xmark text-blue-700"
+                    x-on:click="tags = tags.filter(i => i !== tag)"
+                  ></i>
+                </div>
+              </template>
+              <input
+                hidden
+                type="text"
+                name="tags"
+                :value="tags.join(',')"
+                id="id_tags"
+              />
+            </div>
+          </div>
+        </div>
+        <button
+          type="submit"
+          class="text-xl border border-indigo-500 hover:bg-indigo-500 hover:text-gray-200 rounded-lg p-1 w-full"
+        >
+          Save
+        </button>
+      </form>
+    </form>
+  </div>
+</div>
+{% endblock %}
