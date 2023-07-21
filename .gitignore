@@ -1,0 +1,4 @@
+apps/
+old/
+venv/
+node_modules/
