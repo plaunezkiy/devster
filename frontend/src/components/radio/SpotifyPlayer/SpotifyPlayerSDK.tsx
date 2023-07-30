@@ -16,7 +16,7 @@ const SpotifyPlayerSDK = ({ children }: { children: ReactNode }) => {
     <>
       <WebPlaybackSDK
         initialDeviceName="Devster Radio"
-        getOAuthToken={() => getAuthData()?.access_token}
+        getOAuthToken={async () => (await getAuthData())?.access_token}
         initialVolume={1}
       >
         {children}

@@ -5,13 +5,13 @@ import SpotifyAuthContext, {
 } from "./SpotifyAuthContext";
 import { useRefreshTokenFetch } from "./useFetch";
 import { PlaybackState } from "./types";
+import { useSpotifyClient } from "./utils/client";
 
 const Controls = ({ playerData }: { playerData: PlaybackState }) => {
   const { is_playing } = playerData;
   // playerData === undefined ? { is_playing: false } : playerData;
-  const { isAuthenticated, loading, error, get, put, post } =
-    useSpotifyAuthContext() || {};
-
+  const { isAuthenticated } = useSpotifyAuthContext() || {};
+  const { get, post, put, _delete } = useSpotifyClient();
   const skipTrack = (forward = true) => {
     if (!isAuthenticated) return;
     const dir = forward ? "next" : "previous";

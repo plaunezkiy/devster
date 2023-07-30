@@ -7,12 +7,14 @@ import SpotifyAuthContext, {
 } from "./SpotifyAuthContext";
 import { useRefreshTokenFetch } from "./useFetch";
 import { PlaybackState, Track, TrackFeatures } from "./types";
+import { useSpotifyClient } from "./utils/client";
 // import useAudio from "@/hooks/useAudio";
 
 const TrackItem = ({ track }: { track: Track }) => {
   const [added, setAdded] = useState(false);
   const authData = useContext(SpotifyAuthContext);
-  const { loading, error, get, post, put } = useSpotifyAuthContext() || {};
+  const { loading } = useSpotifyAuthContext() || {};
+  const { get, post, put, _delete } = useSpotifyClient();
   const addToQueue = (track_uri: string) => {
     if (!authData) return;
     post?.(`https://api.spotify.com/v1/me/player/queue?uri=${track_uri}`).then(
@@ -67,7 +69,8 @@ const SongRecommendations = ({
     tracks: [],
   });
   const [queue, setQueue] = useState([]);
-  const { loading, error, get, post, put } = useSpotifyAuthContext() || {};
+  // const { loading, error, get, post, put } = useSpotifyAuthContext() || {};
+  const { get, post, put, _delete } = useSpotifyClient();
 
   const getRecommendations = () => {
     // get recs based on params

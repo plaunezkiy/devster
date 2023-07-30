@@ -33,7 +33,7 @@
 import { Card, Post } from "@/lib/types";
 import { Configuration, OpenAIApi } from "openai-edge";
 import { OpenAIStream, StreamingTextResponse } from "ai";
-import { ChatCompletionFunctions } from "openai-edge/types/api";
+import { ChatCompletionFunctions } from "openai-edge";
 import { createCard } from "@/components/Cards/cards";
 import { createPost } from "@/app/blog/posts";
 

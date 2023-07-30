@@ -12,6 +12,7 @@ import {
   PlaylistList,
   Track,
 } from "./types";
+import { useSpotifyClient } from "./utils/client";
 
 const Popover = ({
   activator,
@@ -33,8 +34,9 @@ const Popover = ({
 };
 
 const AddToPlaylist = ({ track }: { track: Track }) => {
-  const { loading, error, fetchData, postData, putData } =
-    useRefreshTokenFetch();
+  // const { loading, error, fetchData, postData, putData } =
+  //   useRefreshTokenFetch();
+  const { post, get } = useSpotifyClient();
   const authData = useContext(SpotifyAuthContext);
   const playlists = useContext(SpotifyPlaylistsContext);
   const [filteredPlaylists, setFilteredPlaylsits] = useState(
@@ -42,24 +44,24 @@ const AddToPlaylist = ({ track }: { track: Track }) => {
   );
 
   const addToPlaylist = (playlist: Playlist) => {
-    postData(
+    post(
       `https://api.spotify.com/v1/playlists/${playlist.id}/tracks`,
-      authData,
+
       JSON.stringify({
         uris: [track.uri],
-      }),
-      () => {
-        if (!playlists.selected.includes(playlist)) {
-          playlists.selected.unshift(playlist);
-        } else {
-          playlists.selected.sort((x, y) =>
-            x === playlist ? -1 : y === playlist ? 1 : 0
-          );
-        }
-        // console.log(playlists.selected);
-        setFilteredPlaylsits(playlists.selected);
+      })
+    ).then(() => {
+      if (!playlists.selected.includes(playlist)) {
+        playlists.selected.unshift(playlist);
+      } else {
+        playlists.selected.sort((x, y) =>
+          x === playlist ? -1 : y === playlist ? 1 : 0
+        );
       }
-    );
+      // console.log(playlists.selected);
+      setFilteredPlaylsits(playlists.selected);
+    });
+
     // fetchData(
     //   `https://api.spotify.com/v1/me/playlists?limit=50`,
     //   authData,
@@ -72,9 +74,7 @@ const AddToPlaylist = ({ track }: { track: Track }) => {
 
   const filterPlaylists = async (query: string) => {
     if (playlists.all.length === 0) {
-      await fetchData(
-        `https://api.spotify.com/v1/me/playlists?limit=50`,
-        authData,
+      await get(`https://api.spotify.com/v1/me/playlists?limit=50`).then(
         (data: PlaylistList) => (playlists.all = data.items)
       );
     }
@@ -161,8 +161,7 @@ const TrackItem = ({ track }: { track: Track }) => {
 const SongQueue = ({ trackQueue: { queue } }: { trackQueue: PlayerQueue }) => {
   const authData = useContext(SpotifyAuthContext);
   const [show, setShow] = useState(true);
-  const { loading, error, fetchData, postData, putData } =
-    useRefreshTokenFetch();
+  const { post } = useSpotifyClient();
 
   const playTrack = (track: Track) => {
     const queueUris = [
@@ -173,10 +172,7 @@ const SongQueue = ({ trackQueue: { queue } }: { trackQueue: PlayerQueue }) => {
     ];
     // console.log([trackUri, ...trackQueue.map((track) => track.uri)]);\
     console.log(track.name);
-    postData(
-      `https://api.spotify.com/v1/me/player/queue?uri=${track.uri}`,
-      authData
-    );
+    post(`https://api.spotify.com/v1/me/player/queue?uri=${track.uri}`);
   };
 
   return (

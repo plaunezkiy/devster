@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import { BsInfoCircle } from "react-icons/bs";
 import { Track, TrackFeature, TrackFeatures } from "./types";
 
+type barFeature = {
+  name: string;
+  max: number;
+  min: number;
+  description: string;
+};
+
 const HorizontalBar = ({
   feature,
   value,
   onSetActive,
 }: {
-  feature: TrackFeature;
+  feature: barFeature;
   value: number;
   onSetActive: (arg0: any) => void;
 }) => {
@@ -86,16 +93,15 @@ const UnitFeature = ({
 }: {
   label: string;
   value: number;
-  unit: number;
+  unit: string;
   onSetActive: (arg0: any) => void;
 }) => {
   const [active, setActive] = useState(false);
   const activeStyle = active ? " text-green-500" : "";
-  let mode: string;
+
   let key;
   if (label === "key") {
     key = getPitchFromIntKey(value);
-    mode = unit ? "Major" : "Minor";
   }
 
   const setActiveHandler = () => {
@@ -121,7 +127,7 @@ const UnitFeature = ({
       <div className={"w-full flex flex-col items-center" + activeStyle}>
         <p className="text-sm font-semibold capitalize">{label}:</p>
         <p>{key ? key : value}</p>
-        <p>{label === "key" ? mode : unit}</p>
+        <p>{unit}</p>
       </div>
     </div>
   );
@@ -202,7 +208,7 @@ export const FeaturesHorizontal = ({
           <UnitFeature
             label="key"
             value={features.key.value}
-            unit={features.mode.value}
+            unit={features.mode.value ? "Major" : "Minor"}
             onSetActive={setFeatures}
           />
           <UnitFeature
@@ -217,7 +223,7 @@ export const FeaturesHorizontal = ({
             <HorizontalBar
               key={feature_id}
               feature={feature}
-              value={features[feature.name as keyof typeof features]}
+              value={features[feature.name as keyof typeof features].value}
               onSetActive={setFeatures}
             />
           ))}

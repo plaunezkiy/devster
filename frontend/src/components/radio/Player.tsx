@@ -8,7 +8,7 @@ const Player = ({
   setFullScreen: (arg0: boolean) => void;
 }) => {
     
-//   const { isAuthenticated, loading, error } = useSpotifyAuthContext() || {};
+  const { isAuthenticated, loading, error } = useSpotifyAuthContext() || {};
   const spotifyLogin = () => {
     // https://api.spotify.com/authorize
     // if (authData) return;

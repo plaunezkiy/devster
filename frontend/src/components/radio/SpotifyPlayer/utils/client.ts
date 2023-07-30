@@ -13,7 +13,7 @@ export const useSpotifyClient = () => {
   // const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    startTransition(() => getAuthData());
+    // startTransition(() => getAuthData());
     //   setAuthData(JSON.parse(localStorage.getItem("authData") || "null"));
   }, []);
 

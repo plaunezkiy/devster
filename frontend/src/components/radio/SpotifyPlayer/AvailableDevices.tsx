@@ -7,6 +7,7 @@ import useClickOutside from "@/lib/hooks/useClickOutside";
 import { BsSpeaker, BsCheck } from "react-icons/bs";
 import { RiSpeakerLine, RiSpeakerFill } from "react-icons/ri";
 import { Device } from "./types";
+import { useSpotifyClient } from "./utils/client";
 // import { VideoIcon, CheckIcon } from "@radix-ui/react-icons";
 
 const AvailableDevices = () => {
@@ -14,9 +15,8 @@ const AvailableDevices = () => {
   const [devices, setDevices] = useState([]);
   const elRef = useRef(null);
   useClickOutside(elRef, () => setDisplay(false));
-  const { isAuthenticated, loading, error, get, put } =
-    useSpotifyAuthContext() || {};
-
+  const { isAuthenticated } = useSpotifyAuthContext() || {};
+  const { get, post, put, _delete } = useSpotifyClient();
   const getAvailableDevices = () => {
     if (!isAuthenticated) return;
     get?.("https://api.spotify.com/v1/me/player/devices").then((data) =>
