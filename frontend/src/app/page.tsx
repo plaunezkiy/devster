@@ -1,4 +1,3 @@
-import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { FaEnvelope, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";

@@ -1,31 +1,33 @@
 import { useContext, useRef, useState } from "react";
-import SpotifyAuthContext from "@/components/radio/SpotifyPlayer/SpotifyAuthContext";
+import SpotifyAuthContext, {
+  useSpotifyAuthContext,
+} from "@/components/radio/SpotifyPlayer/SpotifyAuthContext";
 import { useRefreshTokenFetch } from "./useFetch";
 import useClickOutside from "@/lib/hooks/useClickOutside";
 import { BsSpeaker, BsCheck } from "react-icons/bs";
 import { RiSpeakerLine, RiSpeakerFill } from "react-icons/ri";
+import { Device } from "./types";
 // import { VideoIcon, CheckIcon } from "@radix-ui/react-icons";
 
 const AvailableDevices = () => {
-  const authData = useContext(SpotifyAuthContext);
   const [display, setDisplay] = useState(false);
   const [devices, setDevices] = useState([]);
   const elRef = useRef(null);
   useClickOutside(elRef, () => setDisplay(false));
-  const { loading, error, fetchData, putData } = useRefreshTokenFetch();
+  const { isAuthenticated, loading, error, get, put } =
+    useSpotifyAuthContext() || {};
 
   const getAvailableDevices = () => {
-    fetchData(
-      "https://api.spotify.com/v1/me/player/devices",
-      authData,
-      (data) => setDevices(data.devices)
+    if (!isAuthenticated) return;
+    get?.("https://api.spotify.com/v1/me/player/devices").then((data) =>
+      setDevices(data.devices)
     );
   };
 
-  const transferPlayback = (device_id) => {
-    putData(
+  const transferPlayback = (device_id: string) => {
+    if (!isAuthenticated) return;
+    put?.(
       "https://api.spotify.com/v1/me/player",
-      authData,
       JSON.stringify({
         device_ids: [device_id],
       })
@@ -45,7 +47,7 @@ const AvailableDevices = () => {
       </p>
       {display && (
         <div className="absolute w-28 top-10 right-0 flex flex-col divide-y border overflow-hidden rounded bg-white">
-          {devices.map((device) => (
+          {devices.map((device: Device) => (
             <p
               className="p-1 cursor-pointer hover:bg-blue-500 text-slate-800 hover:text-white flex items-center gap-2 justify-center duration-150"
               key={device.id}

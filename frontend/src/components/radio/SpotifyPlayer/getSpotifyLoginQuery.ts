@@ -15,7 +15,7 @@ const getSpotifyLoginQuery = () => {
     redirect_uri: SPOTIFY_REDIRECT_URI,
   };
   const query = Object.keys(params)
-    .map((key) => key + "=" + params[key])
+    .map((key) => key + "=" + params[key as keyof typeof params])
     .join("&");
   return query;
 };

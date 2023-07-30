@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import { BsInfoCircle } from "react-icons/bs";
+import { Track, TrackFeature, TrackFeatures } from "./types";
 
-const HorizontalBar = ({ feature, value, onSetActive }) => {
+const HorizontalBar = ({
+  feature,
+  value,
+  onSetActive,
+}: {
+  feature: TrackFeature;
+  value: number;
+  onSetActive: (arg0: any) => void;
+}) => {
   const [active, setActive] = useState(false);
 
   const setActiveHandler = () => {
     setActive(!active);
-    onSetActive((prevState) => ({
+    onSetActive((prevState: TrackFeatures) => ({
       ...prevState,
       [feature.name]: { active: !active, value },
     }));
@@ -51,7 +60,7 @@ const HorizontalBar = ({ feature, value, onSetActive }) => {
   );
 };
 
-const getPitchFromIntKey = (int_key) => {
+const getPitchFromIntKey = (int_key: number) => {
   const keys = {
     0: "C",
     1: "C#/Db",
@@ -66,28 +75,38 @@ const getPitchFromIntKey = (int_key) => {
     10: "A#/Bb",
     11: "B",
   };
-  return keys[int_key];
+  return keys[int_key as keyof typeof keys];
 };
 
-const UnitFeature = ({ label, value, unit, onSetActive }) => {
+const UnitFeature = ({
+  label,
+  value,
+  unit,
+  onSetActive,
+}: {
+  label: string;
+  value: number;
+  unit: number;
+  onSetActive: (arg0: any) => void;
+}) => {
   const [active, setActive] = useState(false);
   const activeStyle = active ? " text-green-500" : "";
-  let mode;
+  let mode: string;
   let key;
-  if (label == "key") {
+  if (label === "key") {
     key = getPitchFromIntKey(value);
     mode = unit ? "Major" : "Minor";
   }
 
   const setActiveHandler = () => {
-    if (mode) {
-      onSetActive((prevState) => ({
+    if (label === "key") {
+      onSetActive((prevState: TrackFeatures) => ({
         ...prevState,
         [label]: { active: !active, value },
         mode: { active: !active, value: unit },
       }));
     } else
-      onSetActive((prevState) => ({
+      onSetActive((prevState: TrackFeatures) => ({
         ...prevState,
         [label]: { active: !active, value },
       }));
@@ -102,13 +121,19 @@ const UnitFeature = ({ label, value, unit, onSetActive }) => {
       <div className={"w-full flex flex-col items-center" + activeStyle}>
         <p className="text-sm font-semibold capitalize">{label}:</p>
         <p>{key ? key : value}</p>
-        <p>{mode ? mode : unit}</p>
+        <p>{label === "key" ? mode : unit}</p>
       </div>
     </div>
   );
 };
 
-export const FeaturesHorizontal = ({ features, setFeatures }) => {
+export const FeaturesHorizontal = ({
+  features,
+  setFeatures,
+}: {
+  features: TrackFeatures;
+  setFeatures: (arg0: TrackFeatures) => void;
+}) => {
   const barFeatures = [
     {
       name: "danceability",
@@ -176,13 +201,13 @@ export const FeaturesHorizontal = ({ features, setFeatures }) => {
         <div className="px-2 flex text-xs">
           <UnitFeature
             label="key"
-            value={features.key}
-            unit={features.mode}
+            value={features.key.value}
+            unit={features.mode.value}
             onSetActive={setFeatures}
           />
           <UnitFeature
             label="tempo"
-            value={features.tempo}
+            value={features.tempo.value}
             unit="bpm"
             onSetActive={setFeatures}
           />
@@ -192,7 +217,7 @@ export const FeaturesHorizontal = ({ features, setFeatures }) => {
             <HorizontalBar
               key={feature_id}
               feature={feature}
-              value={features[feature.name]}
+              value={features[feature.name as keyof typeof features]}
               onSetActive={setFeatures}
             />
           ))}

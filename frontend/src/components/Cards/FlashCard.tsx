@@ -1,5 +1,5 @@
 "use client";
-import { deleteCard } from "@/app/apps/cards/cards";
+import { deleteCard } from "./cards";
 import { Card } from "@/lib/types";
 import { useState } from "react";
 

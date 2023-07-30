@@ -1,21 +1,27 @@
-import { useCallback, useContext, useEffect, useState } from "react";
+import { ReactNode } from "react";
+import { useCallback } from "react";
 import { WebPlaybackSDK } from "react-spotify-web-playback-sdk";
-import SpotifyAuthContext from "@/components/radio/SpotifyPlayer/SpotifyAuthContext";
+import { useSpotifyAuthContext } from "@/components/radio/SpotifyPlayer/SpotifyAuthContext";
+import { getAuthData } from "./utils/getAuthData";
 
-const SpotifyPlayerSDK = ({ children }) => {
-  const authData = useContext(SpotifyAuthContext);
-  const getOAuthToken = useCallback((callback) => {
+const SpotifyPlayerSDK = ({ children }: { children: ReactNode }) => {
+  const { authData } = useSpotifyAuthContext() || {};
+  const getOAuthToken = useCallback((callback: (arg0: any) => {}) => {
     callback(authData?.access_token);
   }, []);
 
+  // const getToken = () => JSON.parse(cookies().get("authData")?.value || "null");
+
   return (
-    <WebPlaybackSDK
-      initialDeviceName="Devster Radio"
-      getOAuthToken={getOAuthToken}
-      initialVolume={1}
-    >
-      {children}
-    </WebPlaybackSDK>
+    <>
+      <WebPlaybackSDK
+        initialDeviceName="Devster Radio"
+        getOAuthToken={() => getAuthData()?.access_token}
+        initialVolume={1}
+      >
+        {children}
+      </WebPlaybackSDK>
+    </>
   );
 };
 

@@ -1,6 +1,10 @@
 import { createContext } from "react";
+import { Playlist } from "./types";
 
-const SpotifyPlaylistsContext = createContext({
+const SpotifyPlaylistsContext = createContext<{
+  selected: Playlist[];
+  all: Playlist[];
+}>({
   selected: [],
   all: [],
 });

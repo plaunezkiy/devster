@@ -1,38 +1,40 @@
 version: "3.4"
 
 services:
-  # db:
-  #   image: postgres:12.15
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data/
-  #   ports:
-  #     - 5432:5432
-  #   environment:
-  #     - POSTGRES_DB=devster
-  #     - POSTGRES_PASSWORD=postgres
-  frontend:
-    image: dvstr-frontend
-    build:
-      context: frontend
-      dockerfile: Dockerfile
-  nginx:
-    image: nginx:1.24.0-alpine
+  db:
+    image: postgres:12.15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
     ports:
-      - 80:80
-      - 443:443
-    restart: always
-    volumes:
-      - ./certbot/www/:/var/www/certbot/
-      - ./certbot/conf/:/etc/letsencrypt/
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - frontend
-  certbot:
-    image: certbot/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    volumes:
-      - ./certbot/www/:/var/www/certbot/
-      - ./certbot/conf/:/etc/letsencrypt/
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=devster
+      - POSTGRES_PASSWORD=postgres
+  
+  # frontend:
+  #   image: dvstr-frontend
+  #   build:
+  #     context: frontend
+  #     dockerfile: Dockerfile
+  # nginx:
+  #   image: nginx:1.24.0-alpine
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   restart: always
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./certbot/conf/:/etc/letsencrypt/
+  #     - ./certbot/www/:/var/www/certbot/
+  #   depends_on:
+  #     - frontend
+  #     - certbot
+  # certbot:
+  #   image: certbot/certbot
+  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #   volumes:
+  #     - ./certbot/conf/:/etc/letsencrypt/
+      # - ./certbot/www/:/var/www/certbot/
 
 volumes:
   postgres_data:

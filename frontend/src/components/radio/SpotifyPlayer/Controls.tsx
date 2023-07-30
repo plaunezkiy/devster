@@ -1,23 +1,27 @@
 import { useContext } from "react";
 import { BsSkipStart, BsSkipEnd, BsPlay, BsPause } from "react-icons/bs";
-import SpotifyAuthContext from "./SpotifyAuthContext";
+import SpotifyAuthContext, {
+  useSpotifyAuthContext,
+} from "./SpotifyAuthContext";
 import { useRefreshTokenFetch } from "./useFetch";
+import { PlaybackState } from "./types";
 
-const Controls = ({ playerData }) => {
-  const authData = useContext(SpotifyAuthContext);
-  const { is_playing } =
-    playerData === undefined ? { is_playing: false } : playerData;
-  const { loading, error, fetchData, putData, postData } =
-    useRefreshTokenFetch();
+const Controls = ({ playerData }: { playerData: PlaybackState }) => {
+  const { is_playing } = playerData;
+  // playerData === undefined ? { is_playing: false } : playerData;
+  const { isAuthenticated, loading, error, get, put, post } =
+    useSpotifyAuthContext() || {};
 
   const skipTrack = (forward = true) => {
+    if (!isAuthenticated) return;
     const dir = forward ? "next" : "previous";
-    postData("https://api.spotify.com/v1/me/player/" + dir, authData);
+    post?.("https://api.spotify.com/v1/me/player/" + dir);
   };
 
   const playTrack = (pause = false) => {
+    if (!isAuthenticated) return;
     const dir = pause ? "pause" : "play";
-    putData("https://api.spotify.com/v1/me/player/" + dir, authData);
+    put?.("https://api.spotify.com/v1/me/player/" + dir);
   };
 
   return (

@@ -8,8 +8,20 @@ interface Props {
 }
 
 const FullscreenModal = ({ open, setOpen }: Props) => {
+  // }) => {
   // const dark = localStorage.getItem("theme");
-  const { currentTrack } = useContext(CurrentTrackContext);
+  // const { currentTrack } = useContext(CurrentTrackContext);
+  const currentTrack = {
+    album: {
+      images: [
+        {
+          url: "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
+        },
+      ],
+    },
+    artists: [{ name: "Artist" }],
+    name: "Song name",
+  };
   // const [dominantColor, setDominantColor] = useState(
   //   dark === "dark" ? "#27272a" : "#fbfbfb"
   // );

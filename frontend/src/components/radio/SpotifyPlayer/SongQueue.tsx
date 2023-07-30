@@ -1,12 +1,25 @@
 import { BsThreeDots } from "react-icons/bs";
-import { useContext, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { msToMinsSecs } from "./utils/converter";
 import SpotifyAuthContext from "@/components/radio/SpotifyPlayer/SpotifyAuthContext";
 import { useRefreshTokenFetch } from "@/components/radio/SpotifyPlayer/useFetch";
 import useClickOutside from "@/lib/hooks/useClickOutside";
 import SpotifyPlaylistsContext from "@/components/radio/SpotifyPlayer/SpotifyPlaylistsContext";
+import {
+  PlaybackState,
+  PlayerQueue,
+  Playlist,
+  PlaylistList,
+  Track,
+} from "./types";
 
-const Popover = ({ activator, children }) => {
+const Popover = ({
+  activator,
+  children,
+}: {
+  activator: React.ReactNode;
+  children: React.ReactNode;
+}) => {
   const elRef = useRef(null);
   const [display, setDisplay] = useState(false);
   useClickOutside(elRef, () => setDisplay(false));
@@ -19,7 +32,7 @@ const Popover = ({ activator, children }) => {
   );
 };
 
-const AddToPlaylist = ({ track }) => {
+const AddToPlaylist = ({ track }: { track: Track }) => {
   const { loading, error, fetchData, postData, putData } =
     useRefreshTokenFetch();
   const authData = useContext(SpotifyAuthContext);
@@ -28,30 +41,7 @@ const AddToPlaylist = ({ track }) => {
     playlists.selected
   );
 
-  // const playlists = [
-  //   {
-  //     id: 1,
-  //     name: "chill1",
-  //     image: "https://i.scdn.co/image/ab67616d0000b273c18ad9004697f1e58778f338",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "chill2",
-  //     image: "https://i.scdn.co/image/ab67616d0000b273c18ad9004697f1e58778f338",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "chill3",
-  //     image: "https://i.scdn.co/image/ab67616d0000b273c18ad9004697f1e58778f338",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "chill4",
-  //     image: "https://i.scdn.co/image/ab67616d0000b273c18ad9004697f1e58778f338",
-  //   },
-  // ];
-
-  const addToPlaylist = (playlist) => {
+  const addToPlaylist = (playlist: Playlist) => {
     postData(
       `https://api.spotify.com/v1/playlists/${playlist.id}/tracks`,
       authData,
@@ -80,12 +70,12 @@ const AddToPlaylist = ({ track }) => {
     // );
   };
 
-  const filterPlaylists = async (query) => {
+  const filterPlaylists = async (query: string) => {
     if (playlists.all.length === 0) {
       await fetchData(
         `https://api.spotify.com/v1/me/playlists?limit=50`,
         authData,
-        (data) => (playlists.all = data.items)
+        (data: PlaylistList) => (playlists.all = data.items)
       );
     }
     // fetchData();
@@ -154,7 +144,7 @@ const AddToPlaylist = ({ track }) => {
   );
 };
 
-const TrackItem = ({ track }) => {
+const TrackItem = ({ track }: { track: Track }) => {
   return (
     <div className="h-fit p-2.5 flex items-center space-x-3 hover:bg-gray-100 dark:hover:bg-zinc-600">
       <div className="flex-1 text-sm">
@@ -168,18 +158,18 @@ const TrackItem = ({ track }) => {
   );
 };
 
-const SongQueue = ({ trackQueue, playerData }) => {
+const SongQueue = ({ trackQueue: { queue } }: { trackQueue: PlayerQueue }) => {
   const authData = useContext(SpotifyAuthContext);
   const [show, setShow] = useState(true);
   const { loading, error, fetchData, postData, putData } =
     useRefreshTokenFetch();
 
-  const playTrack = (track) => {
+  const playTrack = (track: Track) => {
     const queueUris = [
       track.uri,
-      ...trackQueue
-        .filter((t) => t.uri !== track.uri)
-        .map((track) => track.uri),
+      ...queue
+        .filter((t: Track) => t.uri !== track.uri)
+        .map((track: Track) => track.uri),
     ];
     // console.log([trackUri, ...trackQueue.map((track) => track.uri)]);\
     console.log(track.name);
@@ -199,8 +189,8 @@ const SongQueue = ({ trackQueue, playerData }) => {
           Song queue:
         </p>
       </div>
-      <div className="text-xs sm:text-base divide-y cursor-default divide-y divide-black">
-        {trackQueue.map((track, index) => (
+      <div className="text-xs sm:text-base cursor-default divide-y divide-black">
+        {queue.map((track, index) => (
           <TrackItem key={`${track.id}${index}`} track={track} />
         ))}
       </div>

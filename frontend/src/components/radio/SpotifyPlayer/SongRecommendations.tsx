@@ -2,22 +2,22 @@ import { VscLoading } from "react-icons/vsc";
 import { BsPlus, BsCheck } from "react-icons/bs";
 import { useContext, useState } from "react";
 import { msToMinsSecs } from "./utils/converter";
-import SpotifyAuthContext from "./SpotifyAuthContext";
+import SpotifyAuthContext, {
+  useSpotifyAuthContext,
+} from "./SpotifyAuthContext";
 import { useRefreshTokenFetch } from "./useFetch";
+import { PlaybackState, Track, TrackFeatures } from "./types";
 // import useAudio from "@/hooks/useAudio";
 
-const TrackItem = ({ track }) => {
+const TrackItem = ({ track }: { track: Track }) => {
   const [added, setAdded] = useState(false);
   const authData = useContext(SpotifyAuthContext);
-  const { loading, error, fetchData, postData, putData } =
-    useRefreshTokenFetch();
-  const addToQueue = (track_uri) => {
-    postData(
-      `https://api.spotify.com/v1/me/player/queue?uri=${track_uri}`,
-      authData,
-      {}
+  const { loading, error, get, post, put } = useSpotifyAuthContext() || {};
+  const addToQueue = (track_uri: string) => {
+    if (!authData) return;
+    post?.(`https://api.spotify.com/v1/me/player/queue?uri=${track_uri}`).then(
+      (data) => setAdded(true)
     );
-    setAdded(true);
   };
 
   const statusIcon = added ? (
@@ -54,52 +54,58 @@ const TrackItem = ({ track }) => {
   );
 };
 
-const SongRecommendations = ({ playerData, recFeatures }) => {
+const SongRecommendations = ({
+  playerData,
+  recFeatures,
+}: {
+  playerData: PlaybackState | null;
+  recFeatures: TrackFeatures;
+}) => {
   const authData = useContext(SpotifyAuthContext);
   const [recommendations, setRecommendations] = useState({
     seeds: [],
     tracks: [],
   });
   const [queue, setQueue] = useState([]);
-  const { loading, error, fetchData, postData, putData } =
-    useRefreshTokenFetch();
+  const { loading, error, get, post, put } = useSpotifyAuthContext() || {};
 
   const getRecommendations = () => {
     // get recs based on params
     if (!authData) return;
     if (!playerData) return;
     const query = Object.keys(recFeatures)
-      .filter((key) => recFeatures[key].active)
-      .map((key) => `target_${key}=${recFeatures[key].value}`)
+      .filter((key) => recFeatures[key as keyof typeof recFeatures].active)
+      .map(
+        (key) =>
+          `target_${key}=${recFeatures[key as keyof typeof recFeatures].value}`
+      )
       .join("&");
-    fetchData(
-      `https://api.spotify.com/v1/recommendations?seed_tracks=${playerData.item.id}&${query}`,
-      authData,
-      setRecommendations
-    );
+    get?.(
+      `https://api.spotify.com/v1/recommendations?seed_tracks=${playerData.item.id}&${query}`
+    ).then((data) => setRecommendations(data));
   };
 
-  const playPreview = (preview_url) => {
-    console.log(preview_url);
-    setSrc(preview_url);
-    load();
-    play();
-    // fetchData(
-    //   "https://api.spotify.com/v1/me/player/queue",
-    //   authData,
-    //   (data) => {
-    //     const uris = [track_uri, ...data.queue.map((item) => item.uri)];
-    //     console.log([track_uri, ...data.queue.map((item) => item.uri)]);
-    //     putData(
-    //       "https://api.spotify.com/v1/me/player/play",
-    //       authData,
-    //       JSON.stringify({
-    //         uris,
-    //       })
-    //     );
-    //   }
-    // );
-  };
+  // const playPreview = (preview_url) => {
+  //   console.log(preview_url);
+  //   setSrc(preview_url);
+  //   load();
+  //   play();
+  //   // fetchData(
+  //   //   "https://api.spotify.com/v1/me/player/queue",
+  //   //   authData,
+  //   //   (data) => {
+  //   //     const uris = [track_uri, ...data.queue.map((item) => item.uri)];
+  //   //     console.log([track_uri, ...data.queue.map((item) => item.uri)]);
+  //   //     putData(
+  //   //       "https://api.spotify.com/v1/me/player/play",
+  //   //       authData,
+  //   //       JSON.stringify({
+  //   //         uris,
+  //   //       })
+  //   //     );
+  //   //   }
+  //   // );
+  // };
 
   return (
     <div className="w-full divide-y divide-black">
@@ -129,7 +135,7 @@ const SongRecommendations = ({ playerData, recFeatures }) => {
       </div>
       <div className="flex flex-col text-xs sm:text-base divide-y divide-black cursor-default">
         {recommendations.tracks.map(
-          (track) => (
+          (track: Track) => (
             <TrackItem key={track.id} track={track} />
           )
           // {

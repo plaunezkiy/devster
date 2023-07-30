@@ -12,9 +12,9 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# RUN yarn tailwindcss -o src/app/build.css --minify
+RUN yarn tailwindcss -o src/app/build.css --minify
 
-# RUN yarn build
+RUN yarn build
 
 FROM builder AS runner
 WORKDIR /app
@@ -36,4 +36,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "start"]

@@ -1,6 +1,7 @@
 import { SPOTIFY_CLIENT_ID, SPOTIFY_REDIRECT_URI } from "@/lib/const";
 import { NextResponse } from "next/server";
 import { stringify } from "querystring";
+import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   const req = await request.json();
@@ -23,9 +24,12 @@ export async function POST(request: Request) {
       client_id: SPOTIFY_CLIENT_ID,
       client_secret: process.env.SPOTIFY_CLIENT_SECRET,
     }),
-  }).then(async (resp) => {
-    return await resp.json();
-  });
+  })
+    .then(async (resp) => resp.json())
+    .then((data) => {
+      cookies().set("authData", JSON.stringify(data));
+      return data;
+    });
 
   return NextResponse.json(data);
 }

@@ -9,7 +9,7 @@ const API_URL = "http://127.0.0.1:8000";
 //   }).then((resp) => resp.json());
 // };
 
-export const createPost = async (post: Post) => {
+export const createPost = async (post: Post | unknown) => {
 //   console.log("about to create a post", post);
 
   return fetch(API_URL + "/api/blog/post/", {

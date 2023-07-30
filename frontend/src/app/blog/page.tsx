@@ -1,3 +1,4 @@
+import { Post } from "@/lib/types";
 import Link from "next/link";
 import React from "react";
 
@@ -57,7 +58,7 @@ const BlogIndex = async () => {
         <div className="order-2 lg:order-1 flex flex-col gap-4">
           <p className="text-md text-gray-500">Entries found: 4</p>
           <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-8">
-            {posts.map((post) => (
+            {posts.map((post: Post) => (
               <Link
                 href={`/blog/posts/${post.slug}`}
                 key={post.id}
@@ -85,7 +86,8 @@ const BlogIndex = async () => {
                     Post description or the first couple of lines
                   </p>
                   <p className="pb-1 mt-auto ml-auto text-xs text-gray-400">
-                    {post.date_created} 14/11/2022 - 19:07
+                    {/* {post.date_created} */}
+                     14/11/2022 - 19:07
                   </p>
                 </div>
               </Link>

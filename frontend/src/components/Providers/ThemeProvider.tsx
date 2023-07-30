@@ -1,6 +1,10 @@
 "use client";
-import { setMode, themeModeSelector } from "@/lib/store/features/themeSlice";
-import loadFromLocalstorage from "@/lib/store/loadFromLocalStorage";
+import {
+  ThemeModes,
+  setMode,
+  themeModeSelector,
+} from "@/lib/store/features/themeSlice";
+import loadFromLocalstorage from "@/lib/store/loadFromLocalstorage";
 import { useAppDispatch, useAppSelector } from "@/lib/store/store";
 import React, { useEffect } from "react";
 
@@ -13,10 +17,13 @@ const ThemeProvider = ({ children }: Props) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const mode = loadFromLocalstorage("theme", "light");
-    console.log(mode);
-
-    dispatch(setMode(mode));
+    dispatch(
+      setMode(
+        loadFromLocalstorage("theme", "light") === "light"
+          ? ThemeModes.Light
+          : ThemeModes.Dark
+      )
+    );
   }, []);
 
   return (

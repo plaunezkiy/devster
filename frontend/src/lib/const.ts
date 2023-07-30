@@ -3,7 +3,7 @@ export const BASE_URL =
     ? "https://dvstr.net/"
     : "http://localhost:3000/";
 
-export const API_URL = process.env.NODE_ENV === "production" ? "" : "";
+export const API_URL = process.env.NODE_ENV === "production" ? "" : "http://127.0.0.1:8000/api/";
 
 export const SPOTIFY_ACCESS_SCOPE =
   "user-read-playback-state user-modify-playback-state user-read-currently-playing user-library-read user-library-modify streaming playlist-modify-private playlist-modify-public";

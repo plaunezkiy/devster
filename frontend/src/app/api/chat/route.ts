@@ -30,11 +30,11 @@
 //   // Respond with the stream
 //   return new StreamingTextResponse(stream);
 // }
-import { Card } from "@/lib/types";
+import { Card, Post } from "@/lib/types";
 import { Configuration, OpenAIApi } from "openai-edge";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { ChatCompletionFunctions } from "openai-edge/types/api";
-import { createCard } from "@/app/apps/cards/cards";
+import { createCard } from "@/components/Cards/cards";
 import { createPost } from "@/app/blog/posts";
 
 // Create an OpenAI API client (that's edge friendly!)
@@ -96,6 +96,28 @@ const functions: ChatCompletionFunctions[] = [
     },
   },
   {
+    name: "create_recipe",
+    description:
+      "Create a recipe that has a title, sequence of steps to make it and the list of necessary ingredients",
+    parameters: {
+      type: "object",
+      properties: {
+        recipe: {
+          title: "string",
+          // type: {
+          //   type: "string",
+          //   enum: ["breakfast", "lunch", "dinner"],
+          //   description:
+          //     "The temperature unit to use. Infer this from the users location.",
+          // },
+          steps: "string",
+          ingredients: "string[]",
+        },
+      },
+      required: ["recipe"],
+    },
+  },
+  {
     name: "eval_code_in_browser",
     description: "Execute javascript code in the browser with eval().",
     parameters: {
@@ -125,7 +147,10 @@ export async function POST(req: Request) {
 
   const stream = OpenAIStream(response, {
     experimental_onFunctionCall: async (
-      { name, arguments: args },
+      {
+        name,
+        arguments: args,
+      }: { name: string; arguments: Record<any, unknown> },
       createFunctionCallMessages
     ) => {
       let resp;
@@ -163,6 +188,17 @@ export async function POST(req: Request) {
           const cardMsg = createFunctionCallMessages(card);
           return openai.createChatCompletion({
             messages: [...messages, ...cardMsg],
+            stream: true,
+            model: "gpt-3.5-turbo-0613",
+            functions,
+          });
+        case "create_recipe":
+          console.log(args.recipe);
+
+          // const recipe = await (await createCard(args.card)).json();
+          // const cardMsg = createFunctionCallMessages(card);
+          return openai.createChatCompletion({
+            messages: [...messages, "Logged creating a recipe"],
             stream: true,
             model: "gpt-3.5-turbo-0613",
             functions,

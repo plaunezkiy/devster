@@ -1,4 +1,5 @@
 export type Card = {
+  id: number;
   front: string;
   back: string;
   hint: string;
@@ -7,7 +8,9 @@ export type Card = {
 };
 
 export type Post = {
+  id: number;
   series: string;
   title: string;
   text: string;
+  slug: string;
 };
