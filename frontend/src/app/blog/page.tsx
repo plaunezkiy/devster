@@ -50,7 +50,8 @@ const fetchPosts = async () => {
 };
 
 const BlogIndex = async () => {
-  const posts = await fetchPosts();
+  // const posts = [await fetchPosts()];
+  const posts: Post[] = [];
 
   return (
     <div className="w-full flex justify-center">
@@ -87,7 +88,7 @@ const BlogIndex = async () => {
                   </p>
                   <p className="pb-1 mt-auto ml-auto text-xs text-gray-400">
                     {/* {post.date_created} */}
-                     14/11/2022 - 19:07
+                    14/11/2022 - 19:07
                   </p>
                 </div>
               </Link>

@@ -1,3 +1,4 @@
+"use client"
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector, TypedUseSelectorHook } from "react-redux";
 import { themeSlice } from "./features/themeSlice";
