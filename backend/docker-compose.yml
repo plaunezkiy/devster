@@ -17,8 +17,8 @@ services:
       dockerfile: Dockerfile
     command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - static_volume:/dvstr/static/
-      - media_volume:/dvstr/media/
+      - static_volume:/static/
+      - media_volume:/media/
   nginx:
     image: nginx:1.24.0-alpine
     ports:
@@ -31,14 +31,14 @@ services:
       - ./certbot/conf/:/etc/letsencrypt/
       - ./certbot/www/:/var/www/certbot/
       # django static
-      - static_volume:/dvstr/static/
-      - media_volume:/dvstr/media/
+      - static_volume:/static/
+      - media_volume:/media/
     depends_on:
       - backend
       - certbot
   certbot:
     image: certbot/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    # entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     volumes:
       - ./certbot/conf/:/etc/letsencrypt/
       - ./certbot/www/:/var/www/certbot/
